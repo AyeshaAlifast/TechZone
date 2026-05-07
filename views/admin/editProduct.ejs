@@ -1,0 +1,46 @@
+<%- include('../partials/header') %>
+
+<div class="auth-container" style="max-width:600px;">
+  <h2>Edit Product</h2>
+
+  <% if (error && error.length > 0) { %>
+    <div class="alert error"><%= error %></div>
+  <% } %>
+
+  <form action="/admin/products/<%= product._id %>/edit" method="POST">
+    <div class="form-group">
+      <label>Product Name</label>
+      <input type="text" name="name" value="<%= product.name %>" required />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="description" rows="3" required style="width:100%; padding:0.7rem; border:1px solid #ddd; border-radius:4px; font-size:1rem;"><%= product.description %></textarea>
+    </div>
+    <div class="form-group">
+      <label>Category</label>
+      <select name="category" required style="width:100%; padding:0.7rem; border:1px solid #ddd; border-radius:4px; font-size:1rem;">
+        <option value="Phones" <%= product.category === 'Phones' ? 'selected' : '' %>>Phones</option>
+        <option value="Laptops" <%= product.category === 'Laptops' ? 'selected' : '' %>>Laptops</option>
+        <option value="Tablets" <%= product.category === 'Tablets' ? 'selected' : '' %>>Tablets</option>
+        <option value="Accessories" <%= product.category === 'Accessories' ? 'selected' : '' %>>Accessories</option>
+        <option value="TVs" <%= product.category === 'TVs' ? 'selected' : '' %>>TVs</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Price (Rs.)</label>
+      <input type="number" name="price" value="<%= product.price %>" required />
+    </div>
+    <div class="form-group">
+      <label>Stock Quantity</label>
+      <input type="number" name="stock" value="<%= product.stock %>" required />
+    </div>
+    <div class="form-group">
+      <label>Image URL (optional)</label>
+      <input type="text" name="image" value="<%= product.image %>" />
+    </div>
+    <button type="submit" class="btn">Update Product</button>
+    <a href="/admin/products" class="btn-back" style="display:block; margin-top:1rem;">Cancel</a>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>
