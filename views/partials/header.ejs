@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TechZone</title>
-    <link rel="stylesheet" href="/css/style.css" />
-  </head>
-  <body>
-    <nav class="navbar">
-      <a href="/" class="logo">⚡ TechZone</a>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/auth/login">Login</a></li>
-        <li><a href="/auth/signup">Signup</a></li>
-      </ul>
-    </nav>
-  </body>
-</html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TechZone</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<nav class="navbar">
+  <a href="/" class="logo">⚡ TechZone</a>
+  <ul>
+    <% if (locals.user) { %>
+      <li><a href="/">Home</a></li>
+      <% if (locals.role === 'admin') { %>
+        <li><a href="/admin/dashboard">Dashboard</a></li>
+      <% } %>
+      <li><a href="/auth/logout">Logout</a></li>
+    <% } else { %>
+      <li><a href="/auth/login">Login</a></li>
+      <li><a href="/auth/signup">Signup</a></li>
+    <% } %>
+  </ul>
+</nav>

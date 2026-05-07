@@ -38,6 +38,8 @@ app.use(flash());
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
+  res.locals.user = (req.session as any).userId || null;
+  res.locals.role = (req.session as any).role || null;
   next();
 });
 app.use("/auth", authRoutes);

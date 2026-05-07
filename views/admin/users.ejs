@@ -1,0 +1,47 @@
+<%- include('../partials/header') %>
+
+<div class="dashboard">
+  <h1>Manage Users</h1>
+  <a href="/admin/dashboard" class="btn-back">← Back to Dashboard</a>
+
+  <table class="users-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% users.forEach(user => { %>
+      <tr>
+        <td><%= user.name %></td>
+        <td><%= user.email %></td>
+        <td><%= user.role %></td>
+        <td>
+          <span class="badge <%= user.isActive ? 'active' : 'inactive' %>">
+            <%= user.isActive ? 'Active' : 'Inactive' %>
+          </span>
+        </td>
+        <td class="actions">
+          <form action="/admin/users/<%= user._id %>/toggle" method="POST" style="display:inline">
+            <button type="submit" class="btn-sm <%= user.isActive ? 'btn-danger' : 'btn-success' %>">
+              <%= user.isActive ? 'Deactivate' : 'Activate' %>
+            </button>
+          </form>
+          <form action="/admin/users/<%= user._id %>/role" method="POST" style="display:inline">
+            <select name="role" onchange="this.form.submit()">
+              <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>User</option>
+              <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+            </select>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/footer') %>
