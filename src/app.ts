@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db";
 import authRoutes from "./routes/authRoutes";
 import adminRoutes from "./routes/adminRoutes";
+import userRoutes from "./routes/userRoutes";
 
 dotenv.config();
 connectDB();
@@ -44,11 +45,9 @@ app.use((req, res, next) => {
 });
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
+app.use("/", userRoutes);
 
-// Test route
-app.get("/", (req, res) => {
-  res.send("TechZone server is running!");
-});
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

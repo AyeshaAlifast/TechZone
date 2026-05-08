@@ -1,0 +1,20 @@
+<%- include('../partials/header') %>
+
+<div class="history">
+  <h1>Purchase History</h1>
+  <% if (orders.length > 0) { %>
+    <div class="orders">
+      <% orders.forEach(order => { %>
+        <div class="order">
+          <p>Order ID: <%= order.id %></p>
+          <p>Date: <%= order.date %></p>
+          <p>Total: $<%= order.total %></p>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p>No purchase history available</p>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>
