@@ -44,7 +44,14 @@ app.use("/password", passwordRoutes);
 app.get("/", (req, res) => {
   res.render("home");
 });
+app.get("/about", (req, res) => res.render("about"));
 
+app.get("/contact", (req, res) => res.render("contact"));
+
+app.post("/contact", (req, res) => {
+  req.flash("success", "Message sent! We'll get back to you soon.");
+  res.redirect("/contact");
+});
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
