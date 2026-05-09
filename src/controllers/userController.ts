@@ -12,19 +12,26 @@ export const getAbout = (req: Request, res: Response) => {
 };
 
 export const getProducts = async (req: Request, res: Response) => {
-  const { search, category } = req.query;
-  let query: any = {};
+  const search = (req.query.search as string)?.trim();
+  const category = (req.query.category as string)?.trim();
+
+  const query: any = {};
 
   if (search) {
     query.name = { $regex: search, $options: "i" };
   }
 
-  if (category) {
+  if (category && category !== "") {
     query.category = category;
   }
 
   const products = await ProductModel.find(query);
-  res.render("user/products", { products, search, category });
+
+  res.render("user/products", {
+    products,
+    search: search || "",
+    category: category || ""
+  });
 };
 
 export const getProductDetails = async (req: Request, res: Response) => {
@@ -33,7 +40,6 @@ export const getProductDetails = async (req: Request, res: Response) => {
 };
 
 export const getCart = (req: Request, res: Response) => {
-  // For simplicity, using session for cart
   const cart = (req.session as any).cart || [];
   res.render("user/cart", { cart });
 };
@@ -48,57 +54,42 @@ export const postAddToCart = async (req: Request, res: Response) => {
   }
 
   const cart = (req.session as any).cart || [];
-  const existingItem = cart.find((item: any) => item.productId === productId);
+  const existing = cart.find((i: any) => i.productId === productId);
 
-  if (existingItem) {
-    existingItem.quantity += parseInt(quantity);
+  if (existing) {
+    existing.quantity += Number(quantity);
   } else {
     cart.push({
       productId: product._id,
       name: product.name,
       price: product.price,
       image: product.image,
-      quantity: parseInt(quantity)
+      quantity: Number(quantity)
     });
   }
 
   (req.session as any).cart = cart;
-  req.flash("success", "Product added to cart");
+  req.flash("success", "Added to cart");
   res.redirect("/cart");
 };
 
 export const postRemoveFromCart = (req: Request, res: Response) => {
   const { productId } = req.body;
   const cart = (req.session as any).cart || [];
-  (req.session as any).cart = cart.filter((item: any) => item.productId !== productId);
-  req.flash("success", "Product removed from cart");
+
+  (req.session as any).cart = cart.filter(
+    (item: any) => item.productId !== productId
+  );
+
+  req.flash("success", "Removed from cart");
   res.redirect("/cart");
 };
 
-export const getCheckout = (req: Request, res: Response) => {
-  const cart = (req.session as any).cart || [];
-  const total = cart.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
-  res.render("user/checkout", { cart, total });
-};
-
-export const postCheckout = (req: Request, res: Response) => {
-  // Simulate order processing
-  (req.session as any).cart = [];
-  req.flash("success", "Order placed successfully");
-  res.redirect("/order-confirmation");
-};
-
-export const getOrderConfirmation = (req: Request, res: Response) => {
-  res.render("user/orderConfirmation");
-};
-
-export const getPurchaseHistory = (req: Request, res: Response) => {
-  // For simplicity, no actual history
-  res.render("user/purchaseHistory", { orders: [] });
-};
-
 export const getContact = (req: Request, res: Response) => {
-  res.render("user/contact", { error: req.flash("error"), success: req.flash("success") });
+  res.render("user/contact", {
+    error: req.flash("error"),
+    success: req.flash("success")
+  });
 };
 
 export const postContact = async (req: Request, res: Response) => {

@@ -1,21 +1,21 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import User from "../models/User";
-// // GET /login
+
+// Show login page
 export const getLogin = (req: Request, res: Response) => {
   res.render("auth/login", { error: req.flash("error") });
 };
 
-// GET /signup
+// Show signup page
 export const getSignup = (req: Request, res: Response) => {
   res.render("auth/signup", { error: req.flash("error") });
 };
 
-// POST /signup
+// Register user
 export const postSignup = async (req: Request, res: Response) => {
   const { name, email, password, confirmPassword } = req.body;
 
-  // Server-side validation
   if (!name || !email || !password) {
     req.flash("error", "All fields are required");
     return res.redirect("/auth/signup");
@@ -38,20 +38,23 @@ export const postSignup = async (req: Request, res: Response) => {
       return res.redirect("/auth/signup");
     }
 
-    // Hash password with bcrypt
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    await User.create({ name, email, password: hashedPassword });
+    await User.create({
+      name,
+      email,
+      password: hashedPassword
+    });
 
-    req.flash("success", "Account created! Please login.");
+    req.flash("success", "Account created! Please login");
     res.redirect("/auth/login");
-  } catch (err) {
+  } catch {
     req.flash("error", "Something went wrong");
     res.redirect("/auth/signup");
   }
 };
 
-// POST /login
+// Login user
 export const postLogin = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
@@ -62,40 +65,38 @@ export const postLogin = async (req: Request, res: Response) => {
 
   try {
     const user = await User.findOne({ email });
+
     if (!user) {
       req.flash("error", "Invalid email or password");
       return res.redirect("/auth/login");
     }
 
     if (!user.isActive) {
-      req.flash("error", "Your account has been deactivated");
+      req.flash("error", "Account is deactivated");
       return res.redirect("/auth/login");
     }
 
-    // Secure hash comparison
     const isMatch = await bcrypt.compare(password, user.password);
+
     if (!isMatch) {
       req.flash("error", "Invalid email or password");
       return res.redirect("/auth/login");
     }
 
-    // Set session
     (req.session as any).userId = user._id;
     (req.session as any).role = user.role;
     (req.session as any).name = user.name;
 
-    if (user.role === "admin") {
-      return res.redirect("/admin/dashboard");
-    }
-    res.redirect("/");
-
-  } catch (err) {
+    return user.role === "admin"
+      ? res.redirect("/admin/dashboard")
+      : res.redirect("/");
+  } catch {
     req.flash("error", "Something went wrong");
     res.redirect("/auth/login");
   }
 };
 
-// GET /logout
+// Logout user
 export const logout = (req: Request, res: Response) => {
   req.session.destroy(() => {
     res.redirect("/auth/login");

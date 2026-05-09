@@ -123,6 +123,11 @@ body {
   border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
+.footer-box .contact_det{
+  display: flex;
+  justify-content: space-between;
+}
+
 .footer-box h4 {
   color: #fff;
   margin-bottom: 1rem;

@@ -1,17 +1,20 @@
 <%- include('../partials/header') %>
 
 <div class="products">
-  <h1>Our Products</h1>
+  <h1 class="page-title">Our Products</h1>
 
   <form method="GET" action="/products" class="search-form">
 
     <input type="text" name="search" placeholder="Search products..." value="<%= search || '' %>">
 
     <select name="category">
-      <option value="">All Categories </option>
+      <option value="">All Categories</option>
+
+      <option value="Phones" <%= category === 'Phones' ? 'selected' : '' %>>Phones</option>
       <option value="Laptops" <%= category === 'Laptops' ? 'selected' : '' %>>Laptops</option>
-      <option value="Smartphones" <%= category === 'Smartphones' ? 'selected' : '' %>>Smartphones</option>
+      <option value="Tablets" <%= category === 'Tablets' ? 'selected' : '' %>>Tablets</option>
       <option value="Accessories" <%= category === 'Accessories' ? 'selected' : '' %>>Accessories</option>
+      <option value="TVs" <%= category === 'TVs' ? 'selected' : '' %>>TVs</option>
     </select>
 
     <button type="submit" class="btn">Search</button>
@@ -30,6 +33,9 @@
       </div>
     <% }) %>
   </div>
+
+  <% } else { %>
+    <p class="no-products">No products found for your search.</p>
   <% } %>
 
 </div>
