@@ -1,12 +1,17 @@
 import { Request, Response } from "express";
 import UserModel from "../models/User";
 import ProductModel from "../models/Products";
+import OrderModel from "../models/Order";
 
 export const getDashboard = async (req: Request, res: Response) => {
   const totalUsers = await UserModel.countDocuments({ role: "user" });
+  const totalOrders = await OrderModel.countDocuments();
+  const totalProducts = await ProductModel.countDocuments();
   res.render("admin/dashboard", {
     name: (req.session as any).name,
-    totalUsers
+    totalUsers,
+    totalOrders,
+    totalProducts
   });
 };
 export const getUsers = async (req: Request, res: Response) => {
@@ -69,4 +74,19 @@ export const postEditProduct = async (req: Request, res: Response) => {
 export const deleteProduct = async (req: Request, res: Response) => {
   await ProductModel.findByIdAndDelete(req.params.id);
   res.redirect("/admin/products");
+};
+// GET all orders
+export const getOrders = async (req: Request, res: Response) => {
+  const orders = await OrderModel.find()
+    .populate("user", "name email")
+    .populate("products.product", "name price")
+    .sort({ createdAt: -1 });
+  res.render("admin/orders", { orders });
+};
+
+// POST update order status
+export const updateOrderStatus = async (req: Request, res: Response) => {
+  const { status } = req.body;
+  await OrderModel.findByIdAndUpdate(req.params.id, { status });
+  res.redirect("/admin/orders");
 };
