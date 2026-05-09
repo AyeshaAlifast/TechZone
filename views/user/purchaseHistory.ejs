@@ -1,24 +1,37 @@
 <%- include('../partials/header') %>
 
-<div class="history">
+<div class="history-container">
 
-  <h1>Purchase History</h1>
+  <div class="history-header">
+    <h1>🧾 My Orders</h1>
+    <p>Track and manage all your purchases</p>
+  </div>
 
   <% if (orders && orders.length > 0) { %>
 
-    <div class="orders">
+    <div class="order-grid">
 
       <% orders.forEach(order => { %>
 
-        <div class="order">
+        <div class="order-card">
 
-          <p><strong>Order ID:</strong> <%= order._id %></p>
+          <div class="order-top">
+            <span class="order-id">Order #<%= order._id.toString().slice(-6) %></span>
+            <span class="order-date">
+              <%= new Date(order.createdAt).toLocaleDateString() %>
+            </span>
+          </div>
 
-          <p><strong>Date:</strong> <%= new Date(order.createdAt).toLocaleString() %></p>
+          <div class="order-body">
+            <p><strong>Total:</strong> $<%= order.totalAmount %></p>
+            <p><strong>Status:</strong> <span class="status"><%= order.status %></span></p>
+          </div>
 
-          <p><strong>Total:</strong> $<%= order.total %></p>
-
-          <a href="/orders/<%= order._id %>" class="btn">View Details</a>
+          <div class="order-footer">
+            <a href="/orders/<%= order._id %>" class="btn-view">
+              View Details →
+            </a>
+          </div>
 
         </div>
 
@@ -28,7 +41,11 @@
 
   <% } else { %>
 
-    <p>No purchase history available</p>
+    <div class="empty-box">
+      <h2>No Orders Yet</h2>
+      <p>You haven’t placed any orders yet.</p>
+      <a href="/products" class="btn-shop">Start Shopping</a>
+    </div>
 
   <% } %>
 

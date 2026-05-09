@@ -1,0 +1,24 @@
+<%- include('../partials/header') %>
+
+<div class="order-details">
+  <h1>Order Details</h1>
+
+  <div class="card">
+    <p><strong>Order ID:</strong> <%= order._id %></p>
+    <p><strong>Date:</strong> <%= new Date(order.createdAt).toLocaleString() %></p>
+    <p><strong>Total:</strong> $<%= order.totalAmount %></p>
+
+    <h3>Items</h3>
+    <ul>
+      <% order.products.forEach(item => { %>
+        <li>
+          Product: <%= item.product %> |
+          Qty: <%= item.quantity %> |
+          Price: $<%= item.price %>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

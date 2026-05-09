@@ -21,28 +21,36 @@ import {
 
 const router = Router();
 
-// Pages
+/* Auth Middleware */
+const isLoggedIn = (req: any, res: any, next: any) => {
+  if (!req.session.userId) {
+    req.flash("error", "Login required");
+    return res.redirect("/login");
+  }
+  next();
+};
+
+/* Public */
 router.get("/", getHome);
 router.get("/about", getAbout);
 router.get("/contact", getContact);
 router.post("/contact", postContact);
 
-// Products
 router.get("/products", getProducts);
 router.get("/products/:id", getProductDetails);
 
-// Cart
+/*  CART ROUTES */
 router.get("/cart", getCart);
 router.post("/cart/add", postAddToCart);
 router.post("/cart/remove", postRemoveFromCart);
 
-// Checkout (NOW FROM ORDER CONTROLLER)
-router.get("/checkout", getCheckout);
-router.post("/checkout", createOrder);
-router.get("/order-confirmation", getOrderConfirmation);
+/* ORDER ROUTES  */
+router.get("/checkout", isLoggedIn, getCheckout);
+router.post("/checkout", isLoggedIn, createOrder);
 
-// Orders
-router.get("/orders", getUserOrders);
-router.get("/orders/:id", getOrderById);
+router.get("/order-confirmation", isLoggedIn, getOrderConfirmation);
+router.get("/purchase-history", isLoggedIn, getUserOrders);
+router.get("/orders", isLoggedIn, getUserOrders);
+router.get("/orders/:id", isLoggedIn, getOrderById);
 
 export default router;
