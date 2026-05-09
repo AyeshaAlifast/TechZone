@@ -34,26 +34,32 @@ export const createOrder = async (req: Request, res: Response) => {
     0
   );
 
-  const order = await Order.create({
-    name,
-    email,
-    phone,
-    city,
-    address,
-    items: cart,
-    total
+  const order: any = await Order.create({
+    user: (req.session as any).userId,
+
+    products: cart.map((item: any) => ({
+      product: item._id || item.productId,
+      quantity: item.quantity,
+      price: item.price
+    })),
+
+    totalAmount: total,
+
+    shippingAddress: {
+      street: address,
+      city,
+      country: "Pakistan"
+    }
   });
 
+  // clear cart after order
   (req.session as any).cart = [];
 
   return res.redirect(`/order-confirmation?id=${order._id}`);
 };
 
 // Order Confirmation
-export const getOrderConfirmation = async (
-  req: Request,
-  res: Response
-) => {
+export const getOrderConfirmation = async (req: Request, res: Response) => {
   const order = await Order.findById(req.query.id);
 
   if (!order) {
