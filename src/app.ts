@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db";
 import authRoutes from "./routes/authRoutes";
 import adminRoutes from "./routes/adminRoutes";
+import userRoutes from "./routes/userRoutes";
 import passwordRoutes from "./routes/passwordRoutes";
 
 dotenv.config();
@@ -39,11 +40,13 @@ app.use((req, res, next) => {
 
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
+app.use("/", userRoutes);
 app.use("/password", passwordRoutes);
 
 app.get("/", (req, res) => {
   res.render("home");
 });
+
 app.get("/about", (req, res) => res.render("about"));
 
 app.get("/contact", (req, res) => res.render("contact"));
@@ -52,6 +55,7 @@ app.post("/contact", (req, res) => {
   req.flash("success", "Message sent! We'll get back to you soon.");
   res.redirect("/contact");
 });
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

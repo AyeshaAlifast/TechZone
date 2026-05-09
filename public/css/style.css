@@ -44,7 +44,7 @@ body {
 }
 
 .auth-container {
-  max-width: 420px;
+  width: 33%;
   margin: 80px auto;
   background: #fff;
   padding: 2rem;
@@ -109,29 +109,50 @@ body {
   border: 1px solid #27ae60;
 }
 
+/* FOOTER MAIN */
 .footer {
   background: #1a1a2e;
   color: #aaa;
-  text-align: center;
-  padding: 1.5rem;
   margin-top: auto;
 }
 
-.footer ul {
-  list-style: none;
+.footer-top {
   display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-top: 0.5rem;
+  justify-content: space-around;
+  padding: 2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-.footer ul a {
+.footer-box .contact_det{
+  display: flex;
+  justify-content: space-between;
+}
+
+.footer-box h4 {
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.social-links a {
   color: #aaa;
   text-decoration: none;
+  transition: 0.3s;
 }
 
-.footer ul a:hover {
+.social-links a:hover {
   color: #e94560;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding: 1rem;
+  color: #777;
 }
 
 .dashboard {

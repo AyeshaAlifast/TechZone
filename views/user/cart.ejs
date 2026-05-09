@@ -1,0 +1,100 @@
+<%- include('../partials/header') %>
+
+<div class="cart-page">
+
+  <div class="cart-title">
+    <h1>Shopping Cart</h1>
+    <p>Review your items before checkout</p>
+  </div>
+
+  <% if (cart.length > 0) { %>
+
+  <% let total = 0; %>
+
+  <div class="cart-table-wrapper">
+
+    <table class="cart-table">
+
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <% cart.forEach(item => { %>
+          <% total += item.price * item.quantity %>
+
+          <tr>
+
+            <!-- PRODUCT -->
+            <td class="product-cell">
+              <img src="<%= item.image || '/images/placeholder.jpg' %>" />
+              <span><%= item.name %></span>
+            </td>
+
+            <!-- PRICE -->
+            <td>$<%= item.price %></td>
+
+            <!-- QUANTITY (NEW INPUT STYLE) -->
+            <td>
+              <input 
+                type="number"
+                class="qty-input"
+                value="<%= item.quantity %>"
+                min="1"
+              >
+            </td>
+
+            <!-- SUBTOTAL -->
+            <td class="subtotal">
+              $<%= item.price * item.quantity %>
+            </td>
+
+            <!-- REMOVE -->
+            <td>
+              <form method="POST" action="/cart/remove">
+                <input type="hidden" name="productId" value="<%= item.productId %>">
+                <button class="remove-btn">Remove</button>
+              </form>
+            </td>
+
+          </tr>
+
+        <% }) %>
+
+      </tbody>
+
+    </table>
+
+    <!-- TOTAL BAR -->
+    <div class="cart-footer">
+
+      <h2>Total: $<%= total %></h2>
+
+      <div class="cart-buttons">
+        <a href="/products" class="btn outline">Continue Shopping</a>
+        <a href="/checkout" class="btn checkout">Checkout</a>
+      </div>
+
+    </div>
+
+  </div>
+
+  <% } else { %>
+
+    <div class="empty-cart">
+      <h2>Your cart is empty</h2>
+      <a href="/products" class="btn checkout">Start Shopping</a>
+    </div>
+
+  <% } %>
+
+</div>
+
+<%- include('../partials/footer') %>
