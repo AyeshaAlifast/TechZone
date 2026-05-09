@@ -1,0 +1,44 @@
+<%- include('partials/header') %>
+
+<div class="page-container">
+  <div class="page-content">
+    <h1>Contact Us</h1>
+    <p>Have a question or need help? Fill out the form below and we'll get back to you shortly.</p>
+
+    <% if (locals.success && locals.success.length > 0) { %>
+      <div class="alert success"><%= locals.success %></div>
+    <% } %>
+
+    <div class="contact-grid">
+      <form action="/contact" method="POST" class="contact-form">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" name="name" placeholder="Enter your name" required />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="Enter your email" required />
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea name="message" rows="5" placeholder="Write your message..." required style="width:100%; padding:0.7rem; border:1px solid #ddd; border-radius:4px; font-size:1rem;"></textarea>
+        </div>
+        <button type="submit" class="btn">Send Message</button>
+      </form>
+
+      <div class="contact-info">
+        <h3>Get In Touch</h3>
+        <p>📧 support@techzone.com</p>
+        <p>📞 +92 300 1234567</p>
+        <p>📍 Rawalpindi, Punjab, Pakistan</p>
+        <div style="margin-top:1rem;">
+          <a href="https://instagram.com" target="_blank">Instagram</a> &nbsp;|&nbsp;
+          <a href="https://facebook.com" target="_blank">Facebook</a> &nbsp;|&nbsp;
+          <a href="https://twitter.com" target="_blank">Twitter</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

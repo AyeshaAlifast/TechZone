@@ -1,0 +1,54 @@
+<%- include('../partials/header') %>
+
+<div class="dashboard">
+  <h1>Customer Orders</h1>
+  <a href="/admin/dashboard" class="btn-back">← Back to Dashboard</a>
+
+  <% if (orders.length === 0) { %>
+    <p style="margin-top:2rem; color:#666;">No orders yet.</p>
+  <% } else { %>
+  <table class="users-table">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Customer</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Update Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% orders.forEach(order => { %>
+      <tr>
+        <td><%= order._id.toString().slice(-6).toUpperCase() %></td>
+        <td>
+          <%= order.user ? order.user.name : 'Unknown' %><br/>
+          <small><%= order.user ? order.user.email : '' %></small>
+        </td>
+        <td>Rs. <%= order.totalAmount %></td>
+        <td>
+          <span class="badge <%= order.status === 'delivered' ? 'active' : 'inactive' %>">
+            <%= order.status %>
+          </span>
+        </td>
+        <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+        <td>
+          <form action="/admin/orders/<%= order._id %>/status" method="POST" style="display:inline">
+            <select name="status" onchange="this.form.submit()">
+              <option value="pending" <%= order.status === 'pending' ? 'selected' : '' %>>Pending</option>
+              <option value="processing" <%= order.status === 'processing' ? 'selected' : '' %>>Processing</option>
+              <option value="shipped" <%= order.status === 'shipped' ? 'selected' : '' %>>Shipped</option>
+              <option value="delivered" <%= order.status === 'delivered' ? 'selected' : '' %>>Delivered</option>
+              <option value="cancelled" <%= order.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+            </select>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

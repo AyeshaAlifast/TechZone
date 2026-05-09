@@ -7,35 +7,29 @@ import connectDB from "./config/db";
 import authRoutes from "./routes/authRoutes";
 import adminRoutes from "./routes/adminRoutes";
 import userRoutes from "./routes/userRoutes";
+import passwordRoutes from "./routes/passwordRoutes";
 
 dotenv.config();
 connectDB();
 
 const app = express();
 
-// View engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../views"));
 
-// Static files
 app.use(express.static(path.join(__dirname, "../public")));
-
-// Body parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Session
 app.use(session({
   secret: process.env.SESSION_SECRET as string,
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 1000 * 60 * 60 * 24 } // 24 hours
+  cookie: { maxAge: 1000 * 60 * 30 }
 }));
 
-// Flash messages
 app.use(flash());
 
-// Global flash variables for views
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
@@ -43,11 +37,24 @@ app.use((req, res, next) => {
   res.locals.role = (req.session as any).role || null;
   next();
 });
+
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/", userRoutes);
+app.use("/password", passwordRoutes);
 
+app.get("/", (req, res) => {
+  res.render("home");
+});
 
+app.get("/about", (req, res) => res.render("about"));
+
+app.get("/contact", (req, res) => res.render("contact"));
+
+app.post("/contact", (req, res) => {
+  req.flash("success", "Message sent! We'll get back to you soon.");
+  res.redirect("/contact");
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

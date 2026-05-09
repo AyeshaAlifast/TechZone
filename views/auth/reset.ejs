@@ -1,0 +1,23 @@
+<%- include('../partials/header') %>
+
+<div class="auth-container">
+  <h2>Reset Password</h2>
+
+  <% if (error && error.length > 0) { %>
+    <div class="alert error"><%= error %></div>
+  <% } %>
+
+  <form action="/password/reset/<%= token %>" method="POST">
+    <div class="form-group">
+      <label>New Password</label>
+      <input type="password" name="password" placeholder="Min 6 characters" required />
+    </div>
+    <div class="form-group">
+      <label>Confirm Password</label>
+      <input type="password" name="confirmPassword" placeholder="Repeat password" required />
+    </div>
+    <button type="submit" class="btn">Reset Password</button>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>
