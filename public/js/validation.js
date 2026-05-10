@@ -91,3 +91,20 @@ function showError(input, message) {
   input.parentElement.appendChild(error);
   input.style.borderColor = "#e94560";
 }
+// ===== DARK / LIGHT MODE =====
+const themeToggle = document.getElementById("themeToggle");
+
+// Load saved theme
+const savedTheme = localStorage.getItem("theme") || "light";
+document.body.classList.toggle("dark-mode", savedTheme === "dark");
+if (themeToggle) {
+  themeToggle.textContent = savedTheme === "dark" ? "☀️ Light" : "🌙 Dark";
+}
+
+function toggleTheme() {
+  const isDark = document.body.classList.toggle("dark-mode");
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+  if (themeToggle) {
+    themeToggle.textContent = isDark ? "☀️ Light" : "🌙 Dark";
+  }
+}

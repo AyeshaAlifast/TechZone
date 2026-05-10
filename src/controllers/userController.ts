@@ -2,11 +2,14 @@ import { Request, Response } from "express";
 import ProductModel from "../models/Products";
 import ContactModel from "../models/Contact";
 
-export const getHome = async (req: Request, res: Response) => {
-  const products = await ProductModel.find().limit(8);
+// export const getHome = async (req: Request, res: Response) => {
+//   const products = await ProductModel.find().limit(8);
+//   res.render("user/home", { products });
+// };
+export const getHome = async (req: any, res: any) => {
+  const products = await ProductModel.find().limit(6);
   res.render("user/home", { products });
 };
-
 export const getAbout = (req: Request, res: Response) => {
   res.render("user/about");
 };
