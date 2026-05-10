@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Order from "../models/Order";
 
-// Checkout Page
+/* Checkout page */
 export const getCheckout = (req: Request, res: Response) => {
   const cart = (req.session as any).cart || [];
 
@@ -13,7 +13,7 @@ export const getCheckout = (req: Request, res: Response) => {
   res.render("user/checkout", { cart, total });
 };
 
-// Create Order
+/* Create Order */
 export const createOrder = async (req: Request, res: Response) => {
   const cart = (req.session as any).cart || [];
 
@@ -34,14 +34,22 @@ export const createOrder = async (req: Request, res: Response) => {
     0
   );
 
-  const order = await Order.create({
-    name,
-    email,
-    phone,
-    city,
-    address,
-    items: cart,
-    total
+  const order: any = await Order.create({
+    user: (req.session as any).userId,
+
+    products: cart.map((item: any) => ({
+      product: item.productId,
+      quantity: item.quantity,
+      price: item.price
+    })),
+
+    totalAmount: total,
+
+    shippingAddress: {
+      street: address,
+      city,
+      country: "Pakistan"
+    }
   });
 
   (req.session as any).cart = [];
@@ -49,29 +57,33 @@ export const createOrder = async (req: Request, res: Response) => {
   return res.redirect(`/order-confirmation?id=${order._id}`);
 };
 
-// Order Confirmation
-export const getOrderConfirmation = async (
-  req: Request,
-  res: Response
-) => {
+/* 
+   ORDER CONFIRMATION */
+export const getOrderConfirmation = async (req: Request, res: Response) => {
   const order = await Order.findById(req.query.id);
 
-  if (!order) {
-    return res.redirect("/");
-  }
+  if (!order) return res.redirect("/");
 
   res.render("user/orderConfirmation", { order });
 };
 
-// Get All Orders
-export const getUserOrders = async (req: Request, res: Response) => {
-  const orders = await Order.find().sort({ createdAt: -1 });
+/* USER ORDERS (FIXED) */
+export const getUserOrders = async (req: any, res: any) => {
+  const userId = req.session.userId;
+
+  if (!userId) {
+    req.flash("error", "Please login to view your orders");
+    return res.redirect("/login");
+  }
+
+  const orders = await Order.find({ user: userId })
+    .sort({ createdAt: -1 });
 
   res.render("user/purchaseHistory", { orders });
 };
 
-// Get Single Order
-export const getOrderById = async (req: Request, res: Response) => {
+/* SINGLE ORDER */
+export const getOrderById = async (req: any, res: any) => {
   const order = await Order.findById(req.params.id);
 
   if (!order) {
@@ -81,3 +93,4 @@ export const getOrderById = async (req: Request, res: Response) => {
 
   res.render("user/orderDetails", { order });
 };
+
